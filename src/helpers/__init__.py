@@ -7,8 +7,8 @@ import time
 import sys
 from os import environ
 import logging
-from ast import literal_eval
 import uuid
+import starkbank
 
 
 def get_logger(name: str):
@@ -219,3 +219,21 @@ def get_persons():
             "amount": 70099,
         }        
     ]
+
+def auth_startbank():
+    """
+        Start the bank authentication
+    Returns:
+        Object: The Starkbank object
+    """
+    # Get your private key from an environment variable or an encrypted database.
+    # This is only an example of a private key content. You should use your own key.
+    private_key_content = """some secret key here..."""
+
+    project = starkbank.Project(
+        environment=environ.get("ENV", "sandbox"),
+        id=environ.get("STARK_ID", "6485521089953792"),
+        private_key=private_key_content
+    )
+    starkbank.user = project
+    return starkbank
