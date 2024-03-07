@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-offline": "^8.4.0",
+    "serverless-pseudo-parameters": "^2.6.1",
+    "serverless-python-requirements": "^5.3.1"
+  }
+}
