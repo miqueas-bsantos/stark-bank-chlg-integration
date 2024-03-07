@@ -3,6 +3,10 @@ service: starkbank-backend
 custom:
   stage: ${opt:stage, self:provider.stage}
   region: ${opt:region, self:provider.region}
+  regions:
+      development: us-east-1
+      staging: us-east-1
+      production: us-east-1
  
 provider:
   name: aws
@@ -12,8 +16,8 @@ provider:
   environment:
     LOG_LEVEL: INFO 
     STAGE: ${self:custom.stage}
-    REGION: ${self:custom.region}
-    ACCOUNT: ${self:custom.accountID}
+    REGION: ${aws:region}
+    ACCOUNT: ${aws:accountId}
     TZ: 'America/Sao_Paulo'
   lambdaHashingVersion: 20201221
 
