@@ -7,6 +7,7 @@ import time
 import sys
 from os import environ
 import logging
+from ast import literal_eval
 
 
 def get_logger(name: str):
@@ -30,6 +31,21 @@ def get_logger(name: str):
         _logger.setLevel(logging.getLevelName(environ.get('LOG_LEVEL', 'INFO')))
 
     return _logger
+
+def get_message(event: dict):
+    """
+        Get the first message from the event SQS messages
+    Args:
+        event (dict): The event data
+    Returns:
+        dict: The message payload
+    """
+    try:
+        message = json.loads(event['Records'][0]['body'])
+    except Exception as error:
+        message = None   
+    finally:
+        return message 
 
 def return_api(payload, code: int, headers=None, additional=None, lambda_integration=True):
     """

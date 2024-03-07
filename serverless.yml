@@ -33,6 +33,7 @@ package:
 
 functions:
   - ${file(functions/lambda_receive_webhook.yml)}
+  - ${file(functions/lambda_assync_processing.yml)}
   
 resources:
   - ${file(serverless_resources/sqs_sns.yml)}

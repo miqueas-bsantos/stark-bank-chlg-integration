@@ -5,13 +5,12 @@ sys.path.append(dir_path)
 from helpers import (
     basic_exceptions, 
     get_logger, 
-    return_api
+    return_api,
+    get_message
 )
 import boto3
-import json
 # initialize the logger outside of the handler function avoiding multiple initializations
 logger = get_logger("lambda_receive_webhook")
-sqs = boto3.resource('sqs')
 
 
 @basic_exceptions
@@ -23,11 +22,8 @@ def handler(event, context):
     """
     logger.info(f"Event Webhook received: {event}")
     # Get the queue
-    queue_name = f'starkbank-sqs-{os.environ.get("REGION")}-{os.environ.get("ACCOUNT")}-WebHookQueue'
-    logger.info(f"Queue Name: {queue_name}")
-    queue = sqs.get_queue_by_name(QueueName=queue_name)
-    queue.send_message(MessageBody=json.dumps(event))
+    logger.info(f"Event Webhook received processing: {get_message(event=event)}")
 
-    response = {"message": "Webhook received"}
+    response = {"message": "Webhook processed successfully"}
     status = 200
     return return_api(response, status)
