@@ -7,6 +7,10 @@ custom:
       development: us-east-1
       staging: us-east-1
       production: us-east-1
+  enviroments:
+      development: sandbox
+      staging: sandbox
+      production: production    
  
 provider:
   name: aws
@@ -19,6 +23,7 @@ provider:
     REGION: ${aws:region}
     ACCOUNT: ${aws:accountId}
     TZ: 'America/Sao_Paulo'
+    ENV: ${self:custom.enviroments.${self:custom.stage}}
   lambdaHashingVersion: 20201221
 
 package:
@@ -34,6 +39,7 @@ package:
 functions:
   - ${file(functions/lambda_receive_webhook.yml)}
   - ${file(functions/lambda_assync_processing.yml)}
+  - ${file(functions/lambda_random_invoice.yml)}
   
 resources:
   - ${file(serverless_resources/sqs_sns.yml)}

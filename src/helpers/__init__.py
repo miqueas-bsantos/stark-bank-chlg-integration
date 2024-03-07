@@ -8,6 +8,7 @@ import sys
 from os import environ
 import logging
 from ast import literal_eval
+import uuid
 
 
 def get_logger(name: str):
@@ -147,3 +148,74 @@ def basic_exceptions(func):
             }, 500)
 
     return wrapper
+
+def get_uuid():
+    """
+        Generate a UUID
+    Returns:
+        str: The UUID
+    """
+    return str(uuid.uuid4())
+
+def get_persons():
+    """
+        Return persons to be processed
+    Returns:
+        List[dict]: The message payload
+    """
+    return [
+        {
+            "name": "John",
+            "tax_id": "238.448.050-28",
+            "tags": ["War supply", f"Invoice #{get_uuid()}"],
+            "amount": 10000,
+        },
+        {
+            "name": "William R. Vasquez",
+            "tax_id": "238.448.050-28",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 20000,
+        },
+        {
+            "name": "Bianca Irene Salas Neto",
+            "tax_id": "504.452.865-04",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 20000,
+        },
+        {
+            "name": "Joana Lozano Serrano",
+            "tax_id": "622.904.296-78",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 40000,
+        },        
+        {
+            "name": "Ivan de Souza Filho",
+            "tax_id": "336.458.331-53",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 33033,
+        },
+        {
+            "name": "Emiliano Joaquin Soto",
+            "tax_id": "680.104.959-30",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 35033,
+        },
+        {
+            "name": "Sra. Samanta Salas Neto",
+            "tax_id": "931.576.626-19",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 34093,
+        },
+        {
+            "name": "Micaela Valência Jr.",
+            "tax_id": "115.498.946-17",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 49999,
+        },
+        {
+            "name": "Evandro Delatorre",
+            "tax_id": "936.964.422-91",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": 70099,
+        }        
+    ]
