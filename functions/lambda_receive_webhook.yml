@@ -1,0 +1,19 @@
+lambda_receive_webhook:
+  handler: src/lambda_receive_webhook.handler
+  events:
+    - http:
+        method: post
+        path: /webhook
+        cors: true
+  memorySize: 1024
+  timeout: 30
+  iamRoleStatementsName: ${self:service}_lambda_receive_webhook
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+        - "sqs:*"
+        - "cloudwatch:*"
+      Resource:
+        - "*"
