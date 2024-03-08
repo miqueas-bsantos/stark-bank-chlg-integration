@@ -2,9 +2,10 @@ lambda_random_invoice:
   handler: src/lambda_random_invoice.handler
   onError: arn:aws:sns:${self:custom.region}:${aws:accountId}:${self:custom.regions.${self:custom.stage}}-SendRandomInvoiceSNS
   events:
-    - sqs:
-        arn: arn:aws:sqs:${self:custom.region}:${aws:accountId}:starkbank-sqs-${self:custom.regions.${self:custom.stage}}-${aws:accountId}-WebHookQueue
-        batchSize: 1
+    - schedule:
+        name: sended-new-random-invoices
+        description: sended new random invoices every 3 hours
+        rate: rate(3 hours)
   memorySize: 256
   timeout: 30
   iamRoleStatementsName: ${self:service}_lambda_random_invoice
