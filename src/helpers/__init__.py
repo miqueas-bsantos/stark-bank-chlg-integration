@@ -9,6 +9,7 @@ from os import environ
 import logging
 import uuid
 import starkbank
+import random
 
 
 def get_logger(name: str):
@@ -44,7 +45,8 @@ def get_message(event: dict):
     try:
         message = json.loads(event['Records'][0]['body'])
     except Exception as error:
-        message = None   
+        print(f"Error getting message: {error}")
+        message = {}   
     finally:
         return message 
 
@@ -157,68 +159,84 @@ def get_uuid():
     """
     return str(uuid.uuid4())
 
-def get_persons():
+def get_random_persons():
     """
         Return persons to be processed
     Returns:
         List[dict]: The message payload
     """
-    return [
+    # random position list
+    persons = [
         {
             "name": "John",
             "tax_id": "238.448.050-28",
             "tags": ["War supply", f"Invoice #{get_uuid()}"],
-            "amount": 10000,
+            "amount": random.randint(1, 100000),
+        },        
+        {
+            "name": "Irene Solano Santiago Neto",
+            "tax_id": "194.833.728-28",
+            "tags": ["War supply", f"Invoice #{get_uuid()}"],
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "William R. Vasquez",
             "tax_id": "238.448.050-28",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 20000,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Bianca Irene Salas Neto",
             "tax_id": "504.452.865-04",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 20000,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Joana Lozano Serrano",
             "tax_id": "622.904.296-78",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 40000,
+            "amount": random.randint(1, 100000),
         },        
         {
             "name": "Ivan de Souza Filho",
             "tax_id": "336.458.331-53",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 33033,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Emiliano Joaquin Soto",
             "tax_id": "680.104.959-30",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 35033,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Sra. Samanta Salas Neto",
             "tax_id": "931.576.626-19",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 34093,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Micaela Valência Jr.",
             "tax_id": "115.498.946-17",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 49999,
+            "amount": random.randint(1, 100000),
         },
         {
             "name": "Evandro Delatorre",
             "tax_id": "936.964.422-91",
             "tags": ["supply", f"Invoice #{get_uuid()}"],
-            "amount": 70099,
-        }        
+            "amount": random.randint(1, 100000),
+        },
+        {
+            "name": "Dr. Giovane Cordeiro Lutero",
+            "tax_id": "619.728.043-40",
+            "tags": ["supply", f"Invoice #{get_uuid()}"],
+            "amount": random.randint(1, 100000),
+        }            
     ]
+    positions = [i for i in range(0, random.randint(8, len(persons) - 1))]
+    random.shuffle(positions)
+    return [persons[i] for i in positions]
 
 def auth_startbank():
     """

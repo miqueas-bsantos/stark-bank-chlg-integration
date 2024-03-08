@@ -5,7 +5,7 @@ sys.path.append(dir_path)
 from helpers import (
     get_logger, 
     return_api,
-    get_persons,
+    get_random_persons,
     auth_startbank
 )
 # initialize the logger outside of the handler function avoiding multiple initializations
@@ -22,7 +22,7 @@ def handler(event, context):
     response = {"message": "Webhook processed successfully"}
     status = 200
     # Create invoices
-    invoices = starkbank.invoice.create([starkbank.Invoice(**person) for person in get_persons()])
+    invoices = starkbank.invoice.create([starkbank.Invoice(**person) for person in get_random_persons()])
     for invoice in invoices:
         logger.info(f"Created invoice: {invoice.id}")
     logger.info(f"Event ended: {response}")
