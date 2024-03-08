@@ -9,7 +9,7 @@ from helpers import (
     get_message,
     auth_startbank
 )
-import boto3
+import json
 # initialize the logger outside of the handler function avoiding multiple initializations
 logger = get_logger("lambda_receive_webhook")
 starkbank = auth_startbank()
@@ -23,22 +23,29 @@ def handler(event, context):
     """
     logger.info(f"Event Webhook received: {event}")
     # Get the queue
-    transfer_amount = get_message(event=event)
-    logger.info(f"Event Webhook received processing: {transfer_amount}")
-    transfers = starkbank.transfer.create([
-        starkbank.Transfer(
-            amount=transfer_amount.get('event').get('log').get('amount', 0),
-            tax_id='20.018.183/0001-80',
-            name='Stark Bank S.A.',
-            bank_code="20018183",
-            branch_code="0001",
-            account_number="6341320293482496",
-            account_type="payment",
-        )
-    ])
+    event_payload = json.loads(get_message(event=event).get('body', "{}"))
+    log = event_payload.get('event', {}).get('log', {})
+    subscription = event_payload.get('event', {}).get('subscription', None)
+    if subscription == 'invoice' and log.get('type', None) == 'credited':
+        invoice = log.get('invoice')
+        logger.info(f"Event Webhook received processing: {invoice}")
+        transfer_amount = invoice.get('amount', 0)
+        transfers = starkbank.transfer.create([
+            starkbank.Transfer(
+                amount=transfer_amount,
+                tax_id='20.018.183/0001-80',
+                name='Stark Bank S.A.',
+                bank_code="20018183",
+                branch_code="0001",
+                account_number="6341320293482496",
+                account_type="payment",
+            )
+        ])
 
-    for transfer in transfers:
-        logger.info(f"Created transfer: {transfer.id}")
-    response = {"message": "Webhook processed successfully"}
+        for transfer in transfers:
+            logger.info(f"Created transfer: {transfer.id}")
+        response = {"message": "Webhook processed successfully"}
+    else:
+        response = {"message": "Webhook ignored"}
     status = 200
     return return_api(response, status)
