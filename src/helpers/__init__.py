@@ -1,5 +1,4 @@
-from exceptions import (BadRequest, ClientException, ConflictException,
-                        ForbiddenException, NotFound)
+from exceptions import (BadRequest, ForbiddenException, NotFound)
 import traceback
 import json
 from functools import wraps
@@ -50,7 +49,7 @@ def get_message(event: dict):
     finally:
         return message 
 
-def return_api(payload, code: int, headers=None, additional=None, lambda_integration=True):
+def return_api(payload, code: int, headers=None, additional=None):
     """
         This function formats the response header for the API Gateway, 
         usually used in lambda functions not using the proxy integration
@@ -60,7 +59,6 @@ def return_api(payload, code: int, headers=None, additional=None, lambda_integra
         code (int): The response status code
         headers (dict): header response.
         additional (dict): additional response.
-        lambda_integration (bool, optional): If the response is for a lambda integration. Defaults to True.
 
     Returns:
         dict: The response payload and headers
@@ -68,26 +66,23 @@ def return_api(payload, code: int, headers=None, additional=None, lambda_integra
     headers = {} if headers is None else headers
     additional = {} if additional is None else additional
 
-    if lambda_integration:
-        return {
-            "body": json.dumps(payload)
-            if type(payload) is dict or type(payload) is list
-            else payload,
-            "statusCode": code,
-            "headers": {
-                **headers,
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Request-Method": "*",
-                "Access-Control-Allow-Methods": "*",
-                "Access-Control-Request-Headers": "*",
-            },
-            **additional,
-        }
-    else:
-        return payload
+    return {
+        "body": json.dumps(payload)
+        if type(payload) is dict or type(payload) is list
+        else payload,
+        "statusCode": code,
+        "headers": {
+            **headers,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": True,
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Request-Method": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Request-Headers": "*",
+        },
+        **additional,
+    }
 
 
 def basic_exceptions(func):
@@ -112,14 +107,6 @@ def basic_exceptions(func):
                     "message": "deny access", 
                     "detail": str(error)}
                 }, 403)
-        except ClientException as error:
-            traceback.print_exc()
-            return return_api({"data": {
-                "code": 400,
-                "type": "/errors/internal-bad-request-error",
-                "message": "bad request", 
-                "detail": str(error)}
-            }, 400)
         except BadRequest as error:
             traceback.print_exc()
             return return_api({
@@ -133,10 +120,6 @@ def basic_exceptions(func):
         except NotFound as error:
             traceback.print_exc()
             return return_api({"data": {"code": 404, "detail": str(error)}}, 404)
-        except ConflictException as error:
-            traceback.print_exc()
-            return return_api({"data": {"code": 409, "detail": str(error)}}, 409)
-
         except Exception as error:
 
             traceback.print_exc()

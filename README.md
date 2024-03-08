@@ -48,3 +48,9 @@ python -m pip install -r requirements.txt && npm install
  sls offline start
 ```
 ![starting project](starting-project.png)
+
+## Test
+```
+coverage run -m pytest tests --junit-xml=report.xml && coverage report -m
+```
+![Tests](tests_img.png)

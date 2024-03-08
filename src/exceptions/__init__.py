@@ -15,28 +15,3 @@ class NotFound(Exception):
 class ForbiddenException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
-
-
-class ClientException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-
-
-class ConflictException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-
-
-class CallOrderException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-
-
-class MalConfiguredException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-
-
-class RetryException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
